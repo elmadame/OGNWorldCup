@@ -132,7 +132,7 @@
   </div>
 
   <script>
-    const API_URL = 'https://script.google.com/macros/s/AKfycbw8tKzwkKBetrKUO9mkVWtVcAwXXFYXOl469t1HToBngCzVapnwB5SrvoD7ynXcIP90/exec';
+    const API_URL = 'https://script.google.com/macros/s/AKfycbw_mpo_Y-PgWdOt5Ln7fGJi1dS0DgDkGHl3sy_0nBMv4T5nYcBvUgSuu-n8xOkFC8n8/exec';
 
     function showStatus(message, type='ok') {
       const el = document.getElementById('status');
@@ -141,7 +141,7 @@
     }
 
     async function api(payload, query='') {
-      if (API_URL === 'https://script.google.com/macros/s/AKfycbw8tKzwkKBetrKUO9mkVWtVcAwXXFYXOl469t1HToBngCzVapnwB5SrvoD7ynXcIP90/exec') throw new Error('Configura la URL del Web App en admin.html');
+      if (API_URL === 'https://script.google.com/macros/s/AKfycbw_mpo_Y-PgWdOt5Ln7fGJi1dS0DgDkGHl3sy_0nBMv4T5nYcBvUgSuu-n8xOkFC8n8/exec') throw new Error('Configura la URL del Web App en admin.html');
       if (query) {
         const res = await fetch(`${API_URL}?${query}`);
         return await res.json();

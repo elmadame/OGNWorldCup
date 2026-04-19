@@ -333,7 +333,7 @@
       try {
         const payload = getPayload();
 
-        if (API_URL === 'https://script.google.com/macros/s/AKfycbw8tKzwkKBetrKUO9mkVWtVcAwXXFYXOl469t1HToBngCzVapnwB5SrvoD7ynXcIP90/exec') {
+        if (API_URL === 'https://script.google.com/macros/s/AKfycbw_mpo_Y-PgWdOt5Ln7fGJi1dS0DgDkGHl3sy_0nBMv4T5nYcBvUgSuu-n8xOkFC8n8/exec') {
           console.log('Payload demo:', payload);
           setStatus('Modo demo: la quiniela fue validada localmente. Conecta el Apps Script para guardar en Google Sheets.', 'ok');
           return;
@@ -354,7 +354,7 @@
 
     async function loadMatches() {
       try {
-        if (API_URL === 'https://script.google.com/macros/s/AKfycbw8tKzwkKBetrKUO9mkVWtVcAwXXFYXOl469t1HToBngCzVapnwB5SrvoD7ynXcIP90/exec') {
+        if (API_URL === 'https://script.google.com/macros/s/AKfycbw_mpo_Y-PgWdOt5Ln7fGJi1dS0DgDkGHl3sy_0nBMv4T5nYcBvUgSuu-n8xOkFC8n8/exec') {
           matches = [...demoMatches];
           document.getElementById('syncState').textContent = 'Modo demo';
           renderMatches();

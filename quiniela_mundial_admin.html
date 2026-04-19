@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Quiniela Mundial | Organon</title>
+  <style>
+    :root {
+      --bg: #f4f7fb;
+      --surface: #ffffff;
+      --text: #10243e;
+      --muted: #5f7187;
+      --line: #d8e0ea;
+      --organon-navy: #103a5d;
+      --organon-teal: #00a7b5;
+      --organon-magenta: #d64f8a;
+      --world-gold: #e2b641;
+      --success: #0b8f63;
+      --danger: #c0392b;
+      --shadow: 0 14px 34px rgba(16, 58, 93, 0.12);
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--bg); font-family: Inter, Segoe UI, Arial, sans-serif; color: var(--text); }
+    .shell { max-width: 1240px; margin: 0 auto; padding: 24px; }
+    .hero {
+      background: linear-gradient(135deg, var(--organon-navy), #194c77 60%, var(--organon-teal));
+      color: white; border-radius: 28px; padding: 28px; box-shadow: var(--shadow); margin-bottom: 20px;
+    }
+    .hero h1 { margin: 0 0 8px; }
+    .hero p { margin: 0; color: rgba(255,255,255,.86); }
+    .grid { display:grid; grid-template-columns: 1.2fr .8fr; gap: 18px; }
+    .card {
+      background: var(--surface); border-radius: 22px; padding: 22px; box-shadow: var(--shadow); border: 1px solid rgba(16,58,93,.07);
+    }
+    .card h2 { margin-top: 0; }
+    .form-grid { display:grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 12px; }
+    .form-grid-3 { display:grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 12px; }
+    label { font-size: 13px; color: var(--muted); display:block; margin-bottom: 6px; font-weight: 700; }
+    input, select, button, textarea {
+      width: 100%; border-radius: 14px; border: 1px solid var(--line); padding: 12px 14px; font: inherit;
+    }
+    button { border: none; cursor: pointer; font-weight: 800; }
+    .cta { display:flex; gap: 10px; flex-wrap: wrap; margin-top: 14px; }
+    .primary { background: linear-gradient(135deg, var(--organon-teal), #0893a2); color: white; }
+    .dark { background: var(--organon-navy); color: white; }
+    .accent { background: linear-gradient(135deg, var(--world-gold), #efce71); color: #4f3d05; }
+    table { width: 100%; border-collapse: collapse; font-size: 14px; }
+    th, td { padding: 12px 10px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; }
+    th { color: var(--muted); font-size: 12px; text-transform: uppercase; letter-spacing: .06em; }
+    .pill { display:inline-block; padding: 6px 10px; border-radius: 999px; background: rgba(214,79,138,.10); color: #7b1f4a; font-weight: 700; font-size: 12px; }
+    .status { margin-top: 12px; padding: 12px 14px; border-radius: 14px; display:none; font-weight: 700; }
+    .status.ok { display:block; background: rgba(11,143,99,.12); color: var(--success); }
+    .status.error { display:block; background: rgba(192,57,43,.10); color: var(--danger); }
+    @media (max-width: 980px) { .grid, .form-grid, .form-grid-3 { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <section class="hero">
+      <h1>Administrador de quiniela</h1>
+      <p>Alta de partidos, carga de resultados, consulta de usuarios y revisión del ranking conectado a Google Sheets.</p>
+    </section>
+
+    <div class="grid">
+      <section class="card">
+        <h2>Alta o edición de partido</h2>
+        <div class="form-grid-3">
+          <div><label>ID del partido</label><input id="matchId" placeholder="Ej. 1" /></div>
+          <div><label>Grupo / fase</label><input id="group" placeholder="Grupo A / Octavos" /></div>
+          <div><label>Fecha y hora</label><input id="date" placeholder="11 jun 2026 · 19:00" /></div>
+        </div>
+        <div class="form-grid-3" style="margin-top:12px;">
+          <div><label>Equipo local</label><input id="home" placeholder="México" /></div>
+          <div><label>Equipo visitante</label><input id="away" placeholder="Brasil" /></div>
+          <div><label>Estadio / sede</label><input id="stadium" placeholder="Estadio Azteca" /></div>
+        </div>
+        <div class="form-grid" style="margin-top:12px;">
+          <div><label>Emoji bandera local</label><input id="homeFlag" placeholder="🇲🇽" /></div>
+          <div><label>Emoji bandera visitante</label><input id="awayFlag" placeholder="🇧🇷" /></div>
+        </div>
+        <div class="cta">
+          <button class="primary" onclick="saveMatch()">Guardar partido</button>
+          <button class="dark" onclick="loadMatches()">Actualizar tabla</button>
+        </div>
+
+        <hr style="border:none;border-top:1px solid #d8e0ea;margin:22px 0;">
+
+        <h2>Registrar resultado oficial</h2>
+        <div class="form-grid-3">
+          <div><label>ID del partido</label><input id="resultMatchId" placeholder="Ej. 1" /></div>
+          <div><label>Marcador local</label><input id="resultHome" type="number" min="0" max="20" /></div>
+          <div><label>Marcador visitante</label><input id="resultAway" type="number" min="0" max="20" /></div>
+        </div>
+        <div class="cta">
+          <button class="accent" onclick="saveResult()">Guardar resultado</button>
+          <button class="dark" onclick="loadRanking()">Recalcular / ver ranking</button>
+        </div>
+
+        <div id="status" class="status"></div>
+      </section>
+
+      <section class="card">
+        <h2>Ranking</h2>
+        <table>
+          <thead>
+            <tr><th>#</th><th>Participante</th><th>Puntos</th><th>Detalle</th></tr>
+          </thead>
+          <tbody id="rankingBody"></tbody>
+        </table>
+      </section>
+    </div>
+
+    <section class="card" style="margin-top:18px;">
+      <h2>Partidos</h2>
+      <table>
+        <thead>
+          <tr><th>ID</th><th>Fase</th><th>Partido</th><th>Fecha</th><th>Sede</th><th>Resultado</th></tr>
+        </thead>
+        <tbody id="matchesBody"></tbody>
+      </table>
+    </section>
+
+    <section class="card" style="margin-top:18px;">
+      <h2>Usuarios registrados</h2>
+      <table>
+        <thead>
+          <tr><th>Nombre</th><th>Correo</th><th>Área</th><th>Última actualización</th></tr>
+        </thead>
+        <tbody id="usersBody"></tbody>
+      </table>
+    </section>
+  </div>
+
+  <script>
+    const API_URL = 'https://script.google.com/macros/s/AKfycbw8tKzwkKBetrKUO9mkVWtVcAwXXFYXOl469t1HToBngCzVapnwB5SrvoD7ynXcIP90/exec';
+
+    function showStatus(message, type='ok') {
+      const el = document.getElementById('status');
+      el.className = `status ${type}`;
+      el.textContent = message;
+    }
+
+    async function api(payload, query='') {
+      if (API_URL === 'https://script.google.com/macros/s/AKfycbw8tKzwkKBetrKUO9mkVWtVcAwXXFYXOl469t1HToBngCzVapnwB5SrvoD7ynXcIP90/exec') throw new Error('Configura la URL del Web App en admin.html');
+      if (query) {
+        const res = await fetch(`${API_URL}?${query}`);
+        return await res.json();
+      }
+      const res = await fetch(API_URL, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(payload) });
+      return await res.json();
+    }
+
+    async function saveMatch() {
+      try {
+        const payload = {
+          action: 'saveMatch',
+          match: {
+            id: document.getElementById('matchId').value.trim(),
+            group: document.getElementById('group').value.trim(),
+            date: document.getElementById('date').value.trim(),
+            home: document.getElementById('home').value.trim(),
+            away: document.getElementById('away').value.trim(),
+            stadium: document.getElementById('stadium').value.trim(),
+            homeFlag: document.getElementById('homeFlag').value.trim(),
+            awayFlag: document.getElementById('awayFlag').value.trim()
+          }
+        };
+        const data = await api(payload);
+        if (!data.success) throw new Error(data.message || 'No se pudo guardar el partido');
+        showStatus('Partido guardado correctamente.');
+        loadMatches();
+      } catch (e) { showStatus(e.message, 'error'); }
+    }
+
+    async function saveResult() {
+      try {
+        const payload = {
+          action: 'saveResult',
+          result: {
+            matchId: document.getElementById('resultMatchId').value.trim(),
+            homeScore: document.getElementById('resultHome').value.trim(),
+            awayScore: document.getElementById('resultAway').value.trim()
+          }
+        };
+        const data = await api(payload);
+        if (!data.success) throw new Error(data.message || 'No se pudo guardar el resultado');
+        showStatus('Resultado oficial guardado.');
+        loadMatches();
+        loadRanking();
+      } catch (e) { showStatus(e.message, 'error'); }
+    }
+
+    async function loadMatches() {
+      try {
+        const data = await api(null, 'action=getMatches');
+        if (!data.success) throw new Error(data.message || 'No se pudieron obtener los partidos');
+        document.getElementById('matchesBody').innerHTML = data.matches.map(m => `
+          <tr>
+            <td>${m.id}</td>
+            <td><span class="pill">${m.group || ''}</span></td>
+            <td>${m.home} vs ${m.away}</td>
+            <td>${m.date || ''}</td>
+            <td>${m.stadium || ''}</td>
+            <td>${m.result || '-'}</td>
+          </tr>
+        `).join('');
+      } catch (e) { showStatus(e.message, 'error'); }
+    }
+
+    async function loadUsers() {
+      try {
+        const data = await api(null, 'action=getUsers');
+        if (!data.success) throw new Error(data.message || 'No se pudieron obtener los usuarios');
+        document.getElementById('usersBody').innerHTML = data.users.map(u => `
+          <tr>
+            <td>${u.nombre}</td>
+            <td>${u.correo}</td>
+            <td>${u.area || ''}</td>
+            <td>${u.updatedAt || ''}</td>
+          </tr>
+        `).join('');
+      } catch (e) { showStatus(e.message, 'error'); }
+    }
+
+    async function loadRanking() {
+      try {
+        const data = await api(null, 'action=getRanking');
+        if (!data.success) throw new Error(data.message || 'No se pudo cargar el ranking');
+        document.getElementById('rankingBody').innerHTML = data.ranking.map((r, i) => `
+          <tr>
+            <td>${i + 1}</td>
+            <td>${r.nombre}</td>
+            <td><strong>${r.points}</strong></td>
+            <td>${r.exactHits} exactos · ${r.outcomeHits} signos</td>
+          </tr>
+        `).join('');
+      } catch (e) { showStatus(e.message, 'error'); }
+    }
+
+    loadMatches();
+    loadUsers();
+    loadRanking();
+  </script>
+</body>
+</html>

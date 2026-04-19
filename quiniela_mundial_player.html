@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quiniela Mundial | Organon</title>
+  <style>
+    :root {
+      --bg: #f4f7fb;
+      --surface: #ffffff;
+      --text: #10243e;
+      --muted: #5f7187;
+      --line: #d8e0ea;
+      --organon-navy: #103a5d;
+      --organon-teal: #00a7b5;
+      --organon-aqua: #6ad0dc;
+      --organon-magenta: #d64f8a;
+      --world-gold: #e2b641;
+      --world-green: #0b8f63;
+      --danger: #c0392b;
+      --success: #0b8f63;
+      --shadow: 0 14px 34px rgba(16, 58, 93, 0.12);
+      --radius: 20px;
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Inter, Segoe UI, Roboto, Arial, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top right, rgba(106, 208, 220, 0.18), transparent 18%),
+        radial-gradient(circle at top left, rgba(214, 79, 138, 0.10), transparent 18%),
+        linear-gradient(180deg, #f7fbfd 0%, var(--bg) 100%);
+    }
+
+    .hero {
+      background: linear-gradient(135deg, var(--organon-navy), #194c77 56%, var(--organon-teal));
+      color: white;
+      padding: 36px 24px 88px;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::after {
+      content: "";
+      position: absolute;
+      inset: auto -50px -70px auto;
+      width: 260px;
+      height: 260px;
+      background: radial-gradient(circle, rgba(255,255,255,.22), transparent 62%);
+      border-radius: 50%;
+    }
+    .hero .wrap, .content { max-width: 1180px; margin: 0 auto; }
+    .brand {
+      display: flex; align-items: center; gap: 12px; margin-bottom: 18px;
+      font-weight: 700; letter-spacing: .4px;
+    }
+    .brand-badge {
+      width: 42px; height: 42px; border-radius: 14px;
+      background: linear-gradient(135deg, var(--world-gold), #f7d77b);
+      display: grid; place-items: center; color: #14324a; font-size: 20px;
+      box-shadow: 0 8px 20px rgba(0,0,0,.16);
+    }
+    .hero-grid {
+      display: grid; grid-template-columns: 1.4fr .8fr; gap: 28px; align-items: end;
+    }
+    h1 { margin: 0 0 12px; font-size: clamp(30px, 5vw, 56px); line-height: 1.02; }
+    .hero p { margin: 0; color: rgba(255,255,255,.86); max-width: 760px; font-size: 18px; }
+    .hero-card {
+      background: rgba(255,255,255,.12); backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,.18);
+      padding: 22px; border-radius: 22px;
+    }
+    .hero-card strong { display:block; font-size: 14px; text-transform: uppercase; letter-spacing: .08em; color: rgba(255,255,255,.78); margin-bottom: 12px; }
+    .hero-card ul { margin: 0; padding-left: 18px; color: white; line-height: 1.8; }
+
+    .content { margin-top: -52px; padding: 0 24px 40px; }
+    .panel {
+      background: var(--surface); border: 1px solid rgba(16,58,93,.08); border-radius: var(--radius);
+      box-shadow: var(--shadow); padding: 24px;
+    }
+    .topbar {
+      display: grid; grid-template-columns: 1.1fr .9fr; gap: 18px; align-items: end; margin-bottom: 22px;
+    }
+    .title { font-size: 24px; margin: 0 0 6px; }
+    .subtle { color: var(--muted); }
+    .form-grid {
+      display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 14px;
+    }
+    label { font-size: 13px; color: var(--muted); display:block; margin-bottom: 6px; font-weight: 600; }
+    input, select, button, textarea {
+      width: 100%; border: 1px solid var(--line); border-radius: 14px; padding: 12px 14px;
+      font: inherit; color: var(--text); background: white;
+    }
+    input:focus, select:focus, textarea:focus {
+      outline: 2px solid rgba(0,167,181,.18); border-color: var(--organon-teal);
+    }
+    .cta-row { display:flex; gap: 12px; flex-wrap: wrap; margin-top: 14px; }
+    button {
+      border: none; cursor: pointer; font-weight: 700; transition: transform .15s ease, opacity .15s ease;
+    }
+    button:hover { transform: translateY(-1px); }
+    .btn-primary { background: linear-gradient(135deg, var(--organon-teal), #0893a2); color: white; }
+    .btn-secondary { background: #eef5f8; color: var(--organon-navy); }
+    .btn-dark { background: var(--organon-navy); color: white; }
+
+    .meta-strip {
+      display:grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 14px; margin: 22px 0;
+    }
+    .meta-card {
+      background: linear-gradient(180deg, #ffffff, #f7fbfd); border: 1px solid var(--line); border-radius: 18px; padding: 18px;
+    }
+    .meta-card small { color: var(--muted); display:block; margin-bottom: 6px; }
+    .meta-card strong { font-size: 22px; }
+
+    .section-head {
+      display:flex; justify-content: space-between; gap: 14px; align-items: center; margin: 12px 0 18px;
+      flex-wrap: wrap;
+    }
+    .section-head h2 { margin: 0; font-size: 24px; }
+    .legend { display:flex; gap: 10px; flex-wrap: wrap; }
+    .legend span {
+      background: #f4f8fa; color: var(--muted); border-radius: 999px; padding: 8px 12px; font-size: 13px; border: 1px solid var(--line);
+    }
+    .matches {
+      display:grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 18px;
+    }
+    .match-card {
+      border: 1px solid var(--line); border-radius: 20px; padding: 18px; background:
+        linear-gradient(180deg, #fff 0%, #fbfdff 100%);
+      position: relative;
+    }
+    .match-top { display:flex; justify-content: space-between; gap: 10px; align-items: start; margin-bottom: 14px; }
+    .match-meta { font-size: 13px; color: var(--muted); }
+    .match-group { background: rgba(226,182,65,.14); color: #8b6500; padding: 6px 10px; border-radius: 999px; font-size: 12px; font-weight: 700; }
+    .teams { display:grid; gap: 10px; margin-bottom: 16px; }
+    .team-row { display:flex; align-items:center; gap: 10px; font-weight: 700; }
+    .flag {
+      width: 34px; height: 34px; border-radius: 50%; display:grid; place-items:center;
+      background: linear-gradient(135deg, rgba(16,58,93,.08), rgba(0,167,181,.16)); color: var(--organon-navy);
+      font-size: 18px;
+    }
+    .pick-row { display:grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 14px; }
+    .pick-btn {
+      border: 1px solid var(--line); background: white; color: var(--text);
+      border-radius: 14px; padding: 12px; font-weight: 800;
+    }
+    .pick-btn.active.home { background: rgba(0,167,181,.12); border-color: var(--organon-teal); color: var(--organon-navy); }
+    .pick-btn.active.draw { background: rgba(226,182,65,.18); border-color: var(--world-gold); color: #7b5a05; }
+    .pick-btn.active.away { background: rgba(214,79,138,.12); border-color: var(--organon-magenta); color: #7b1f4a; }
+
+    .score-grid { display:grid; grid-template-columns: 1fr auto 1fr; align-items:center; gap: 10px; }
+    .score-grid input { text-align: center; font-weight: 800; }
+    .score-grid span { color: var(--muted); font-weight: 700; }
+
+    .status {
+      margin-top: 18px; padding: 14px 16px; border-radius: 16px; font-weight: 600; display:none;
+    }
+    .status.ok { display:block; background: rgba(11,143,99,.12); color: var(--success); }
+    .status.error { display:block; background: rgba(192,57,43,.10); color: var(--danger); }
+
+    .footer-note {
+      margin-top: 24px; color: var(--muted); font-size: 13px; text-align: center;
+    }
+
+    @media (max-width: 900px) {
+      .hero-grid, .topbar { grid-template-columns: 1fr; }
+      .form-grid, .meta-strip { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <section class="hero">
+    <div class="wrap">
+      <div class="brand">
+        <div class="brand-badge">🏆</div>
+        <div>Organon | Quiniela Mundial</div>
+      </div>
+      <div class="hero-grid">
+        <div>
+          <h1>Tu quiniela del Mundial, clara, elegante y competitiva.</h1>
+          <p>Selecciona cada partido, registra marcador estimado y compite con tu equipo. Diseño en español con una estética inspirada en Organon y acentos visuales del Mundial.</p>
+        </div>
+        <div class="hero-card">
+          <strong>Incluye</strong>
+          <ul>
+            <li>Registro de participantes</li>
+            <li>Selección 1X2 + marcador</li>
+            <li>Conexión con Google Sheets</li>
+            <li>Administración de resultados y ranking</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <main class="content">
+    <section class="panel">
+      <div class="topbar">
+        <div>
+          <h2 class="title">Registro del participante</h2>
+          <div class="subtle">Completa tus datos y luego captura tus pronósticos para todos los partidos del Mundial.</div>
+        </div>
+        <div class="form-grid">
+          <div>
+            <label for="nombre">Nombre completo</label>
+            <input id="nombre" placeholder="Ej. Luis Herrera" />
+          </div>
+          <div>
+            <label for="correo">Correo</label>
+            <input id="correo" type="email" placeholder="nombre@empresa.com" />
+          </div>
+          <div>
+            <label for="area">Área / equipo</label>
+            <input id="area" placeholder="Ej. Business Transformation" />
+          </div>
+        </div>
+      </div>
+
+      <div class="meta-strip">
+        <div class="meta-card"><small>Formato</small><strong>1X2 + marcador</strong></div>
+        <div class="meta-card"><small>Registro</small><strong>Por Google Sheets</strong></div>
+        <div class="meta-card"><small>Idioma</small><strong>Español</strong></div>
+        <div class="meta-card"><small>Estado</small><strong id="syncState">Modo demo</strong></div>
+      </div>
+
+      <div class="section-head">
+        <h2>Partidos del Mundial</h2>
+        <div class="legend">
+          <span>1 = gana local</span>
+          <span>X = empate</span>
+          <span>2 = gana visitante</span>
+          <span>Marcador opcional pero recomendado</span>
+        </div>
+      </div>
+
+      <div id="matches" class="matches"></div>
+
+      <div class="cta-row">
+        <button class="btn-primary" id="saveBtn">Guardar quiniela</button>
+        <button class="btn-secondary" id="loadBtn">Cargar partidos del servidor</button>
+        <button class="btn-dark" id="demoBtn">Usar demo local</button>
+      </div>
+
+      <div id="status" class="status"></div>
+      <div class="footer-note">Sugerencia: conecta esta página a un Web App de Google Apps Script para almacenar usuarios, partidos, resultados y ranking en Google Sheets.</div>
+    </section>
+  </main>
+
+  <script>
+    const API_URL = 'https://script.google.com/macros/s/AKfycbw8tKzwkKBetrKUO9mkVWtVcAwXXFYXOl469t1HToBngCzVapnwB5SrvoD7ynXcIP90/exec';
+
+    const demoMatches = [
+      { id: 1, group: 'Grupo A', date: '11 jun 2026 · 19:00', stadium: 'Estadio Azteca', home: 'México', away: 'Japón', homeFlag: '🇲🇽', awayFlag: '🇯🇵' },
+      { id: 2, group: 'Grupo A', date: '12 jun 2026 · 16:00', stadium: 'Guadalajara', home: 'Canadá', away: 'Marruecos', homeFlag: '🇨🇦', awayFlag: '🇲🇦' },
+      { id: 3, group: 'Grupo B', date: '12 jun 2026 · 20:00', stadium: 'Monterrey', home: 'España', away: 'Brasil', homeFlag: '🇪🇸', awayFlag: '🇧🇷' },
+      { id: 4, group: 'Grupo B', date: '13 jun 2026 · 13:00', stadium: 'Los Ángeles', home: 'Argentina', away: 'Alemania', homeFlag: '🇦🇷', awayFlag: '🇩🇪' },
+      { id: 5, group: 'Grupo C', date: '13 jun 2026 · 18:00', stadium: 'Nueva York', home: 'Francia', away: 'Estados Unidos', homeFlag: '🇫🇷', awayFlag: '🇺🇸' },
+      { id: 6, group: 'Grupo C', date: '14 jun 2026 · 17:00', stadium: 'Toronto', home: 'Inglaterra', away: 'Países Bajos', homeFlag: '🏴', awayFlag: '🇳🇱' }
+    ];
+
+    let matches = [...demoMatches];
+    const picks = {};
+
+    function setStatus(message, type = 'ok') {
+      const box = document.getElementById('status');
+      box.className = `status ${type}`;
+      box.textContent = message;
+    }
+
+    function renderMatches() {
+      const root = document.getElementById('matches');
+      root.innerHTML = matches.map(match => {
+        const pick = picks[match.id] || {};
+        return `
+          <article class="match-card">
+            <div class="match-top">
+              <div class="match-meta">
+                <div><strong>${match.date}</strong></div>
+                <div>${match.stadium}</div>
+              </div>
+              <div class="match-group">${match.group}</div>
+            </div>
+            <div class="teams">
+              <div class="team-row"><div class="flag">${match.homeFlag || '🏳️'}</div> ${match.home}</div>
+              <div class="team-row"><div class="flag">${match.awayFlag || '🏳️'}</div> ${match.away}</div>
+            </div>
+            <div class="pick-row">
+              <button class="pick-btn ${pick.result === '1' ? 'active home' : ''}" onclick="setPick(${match.id}, '1')">1</button>
+              <button class="pick-btn ${pick.result === 'X' ? 'active draw' : ''}" onclick="setPick(${match.id}, 'X')">X</button>
+              <button class="pick-btn ${pick.result === '2' ? 'active away' : ''}" onclick="setPick(${match.id}, '2')">2</button>
+            </div>
+            <div class="score-grid">
+              <input type="number" min="0" max="20" placeholder="Local" value="${pick.homeScore ?? ''}" onchange="setScore(${match.id}, 'homeScore', this.value)" />
+              <span>vs</span>
+              <input type="number" min="0" max="20" placeholder="Visitante" value="${pick.awayScore ?? ''}" onchange="setScore(${match.id}, 'awayScore', this.value)" />
+            </div>
+          </article>
+        `;
+      }).join('');
+    }
+
+    function setPick(matchId, result) {
+      picks[matchId] = { ...(picks[matchId] || {}), result };
+      renderMatches();
+    }
+
+    function setScore(matchId, field, value) {
+      picks[matchId] = { ...(picks[matchId] || {}), [field]: value === '' ? '' : Number(value) };
+    }
+
+    function getPayload() {
+      const nombre = document.getElementById('nombre').value.trim();
+      const correo = document.getElementById('correo').value.trim();
+      const area = document.getElementById('area').value.trim();
+
+      if (!nombre || !correo) {
+        throw new Error('Nombre y correo son obligatorios.');
+      }
+
+      const predictions = matches.map(match => ({
+        matchId: match.id,
+        home: match.home,
+        away: match.away,
+        prediction: picks[match.id]?.result || '',
+        homeScore: picks[match.id]?.homeScore ?? '',
+        awayScore: picks[match.id]?.awayScore ?? ''
+      }));
+
+      return { user: { nombre, correo, area }, predictions };
+    }
+
+    async function saveQuiniela() {
+      try {
+        const payload = getPayload();
+
+        if (API_URL === 'https://script.google.com/macros/s/AKfycbw8tKzwkKBetrKUO9mkVWtVcAwXXFYXOl469t1HToBngCzVapnwB5SrvoD7ynXcIP90/exec') {
+          console.log('Payload demo:', payload);
+          setStatus('Modo demo: la quiniela fue validada localmente. Conecta el Apps Script para guardar en Google Sheets.', 'ok');
+          return;
+        }
+
+        const res = await fetch(API_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify({ action: 'submitPrediction', ...payload })
+        });
+        const data = await res.json();
+        if (!data.success) throw new Error(data.message || 'No se pudo guardar la quiniela.');
+        setStatus('Tu quiniela se guardó correctamente.', 'ok');
+      } catch (error) {
+        setStatus(error.message, 'error');
+      }
+    }
+
+    async function loadMatches() {
+      try {
+        if (API_URL === 'https://script.google.com/macros/s/AKfycbw8tKzwkKBetrKUO9mkVWtVcAwXXFYXOl469t1HToBngCzVapnwB5SrvoD7ynXcIP90/exec') {
+          matches = [...demoMatches];
+          document.getElementById('syncState').textContent = 'Modo demo';
+          renderMatches();
+          setStatus('Cargados partidos demo locales.', 'ok');
+          return;
+        }
+        const res = await fetch(`${API_URL}?action=getMatches`);
+        const data = await res.json();
+        if (!data.success) throw new Error(data.message || 'No fue posible obtener los partidos.');
+        matches = data.matches;
+        document.getElementById('syncState').textContent = 'Conectado';
+        renderMatches();
+        setStatus('Partidos cargados desde Google Sheets.', 'ok');
+      } catch (error) {
+        setStatus(error.message, 'error');
+      }
+    }
+
+    document.getElementById('saveBtn').addEventListener('click', saveQuiniela);
+    document.getElementById('loadBtn').addEventListener('click', loadMatches);
+    document.getElementById('demoBtn').addEventListener('click', () => {
+      matches = [...demoMatches];
+      document.getElementById('syncState').textContent = 'Modo demo';
+      renderMatches();
+      setStatus('Restablecido a modo demo.', 'ok');
+    });
+
+    renderMatches();
+  </script>
+</body>
+</html>

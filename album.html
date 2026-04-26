@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OGN Album · Visualizador</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="hero">
+    <div class="container hero__inner">
+      <div>
+        <div class="eyebrow">---Álbum digital coleccionable</div>
+        <h1>COPA ORGANON 2026</h1>
+        <p>Abre sobres, colecciona cartas, intercambia y completa tu álbum. Juega, compite y gana reconocimientos exclusivos.
+
+</p>
+      </div>
+      <div class="hero__box">
+        <div><img src="https://digitalhub.fifa.com/transform/157d23bf-7e13-4d7b-949e-5d27d340987e/WC26_Logo?&io=transform:fill,height:210&quality=75" alt="Texto descriptivo" width="100" height="145">
+</div>
+
+      </div>
+    </div>
+  </header>
+
+  <main class="container page">
+    <section class="panel access-panel">
+      <div class="panel__head">
+        <div>
+          <h2>Acceso</h2>
+          <p>Carga tu colección y consulta el progreso del álbum coloca tu usuario y correo de Organon</p>
+        </div>
+      </div>
+      <div class="grid-3">
+        <div>
+          <label>Usuario</label>
+          <input id="userName" placeholder="Ej. usuario@organon.com" />
+        </div>
+        <div>
+          <label>Correo</label>
+          <input id="userEmail" type="email" placeholder="nombre@organon.com" />
+        </div>
+        <div class="field-button">
+          <button class="btn btn--primary" id="loadCollectionBtn">Cargar colección</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel booster-panel">
+      <div class="panel__head panel__head--wrap">
+        <div>
+          <h2>Booster pack / Abre sobres</h2>
+          <p>Abre un booster de 3 cartas cada hora</p>
+        </div>
+        <div class="booster-tools">
+          <div class="cooldown-box">
+            <span>Próxima apertura</span>
+            <strong id="cooldownText">Cargar usuario</strong>
+          </div>
+          <div class="code-box">
+            <label for="boosterCodeInput">Código booster extra</label>
+            <div class="code-box__row">
+              <input id="boosterCodeInput" placeholder="OGN-UXUZ-Y7AY-PMMN" autocomplete="off" />
+              <button class="btn btn--secondary" id="redeemBoosterCodeBtn" type="button">Abrir extra</button>
+            </div>
+            <small>Cada código abre 1 booster adicional. No reinicia ni modifica el cooldown normal.</small>
+          </div>
+        </div>
+      </div>
+      <div class="booster-layout">
+        <div class="booster-pack-wrap">
+          <button id="openBoosterBtn" class="booster-pack" aria-label="Abrir booster">
+            <div class="booster-pack__shine"></div>
+            <div class="booster-pack__title">WC 2026</div>
+            <div class="booster-pack__subtitle">Booster Pack</div>
+            <div class="booster-pack__meta"><img src="https://digitalhub.fifa.com/transform/157d23bf-7e13-4d7b-949e-5d27d340987e/WC26_Logo?&io=transform:fill,height:210&quality=75" alt="Texto descriptivo" width="150" height="200"></div>
+          </button>
+        </div>
+        <div class="booster-reveal" id="boosterReveal">
+          <div class="booster-placeholder">Aquí aparecerán las 3 cartas del booster pack.(Puede tardar unos segundos)</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="stats-grid">
+      <article class="stat-card"><span>Únicas</span><strong id="uniqueCount">0 / 103</strong></article>
+      <article class="stat-card"><span>Total</span><strong id="totalCount">0</strong></article>
+      <article class="stat-card"><span>Duplicadas</span><strong id="duplicateCount">0</strong></article>
+      <article class="stat-card"><span>Progreso</span><strong id="progressPercent">0%</strong></article>
+    </section>
+
+    <section class="panel album-panel">
+      <div class="panel__head panel__head--wrap">
+        <div>
+          <h2>Álbum completo</h2>
+          <p>Visualización de 103 cards.</p>
+        </div>
+        <div class="filters-inline">
+          <input id="searchInput" placeholder="Buscar por nombre, número o team" />
+          <select id="ownershipFilter">
+            <option value="all">Todas</option>
+            <option value="owned">Solo obtenidas</option>
+            <option value="missing">Solo faltantes</option>
+          </select>
+        </div>
+      </div>
+      <div class="album-grid" id="albumGrid"></div>
+    </section>
+
+    <div id="statusBox" class="status status--hidden"></div>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>

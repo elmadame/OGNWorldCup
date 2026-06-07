@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>VILLANUEVAs official FIFA WC 2026 QUINIELA</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="#home" aria-label="Home">
+      <span class="logo-slot" style="--logo-url:url('https://upload.wikimedia.org/wikipedia/en/1/17/2026_FIFA_World_Cup_emblem.svg')" aria-hidden="true"></span>
+      <div>
+        <strong>VILLANUEVAs</strong>
+        <small>official FIFA WC 2026 QUINIELA</small>
+      </div>
+    </a>
+    <button class="burger" id="burger" aria-label="Open navigation" aria-expanded="false"><span></span><span></span><span></span></button>
+    <nav id="nav" aria-label="Main navigation">
+      <a href="#calendar">Calendar</a>
+      <a href="#quiniela">Quiniela</a>
+      <a href="#results">Results</a>
+      <a href="#leaderboard">Positions</a>
+    </nav>
+  </header>
+
+  <main id="home">
+    <section class="hero sticker-panel">
+      <div class="hero-copy">
+        <p class="eyebrow">Collectors edition · 2026</p>
+        <h1>VILLANUEVAs official FIFA WC 2026 QUINIELA</h1>
+        <p class="hero-text">A Panini-inspired prediction album for the World Cup: calendar, match picks, live result capture, and positions table in one responsive app. Designed for fast mobile use without horizontal scrolling.</p>
+        <div class="hero-actions">
+          <button id="syncBtn">SYNC</button>
+          <button id="refreshHeroBtn" class="secondary">REFRESH DATA</button>
+        </div>
+      </div>
+      <aside class="hero-card album-card">
+        <div class="image-placeholder logo-placeholder" style="--hero-logo:url('https://upload.wikimedia.org/wikipedia/en/1/17/2026_FIFA_World_Cup_emblem.svg')"><span>Official emblem slot</span></div>
+        <span>104</span>
+        <p>matches loaded</p>
+      </aside>
+    </section>
+
+    <section class="panel status" id="connectionStatus">Ready to sync.</section>
+
+    <section class="stats album-strip">
+      <article class="stat-sticker"><b id="statParticipants">0</b><span>Participants</span></article>
+      <article class="stat-sticker"><b id="statPredictions">0</b><span>Predictions</span></article>
+      <article class="stat-sticker"><b id="statResults">0</b><span>Results entered</span></article>
+    </section>
+
+    <section id="calendar" class="panel album-section">
+      <div class="section-head">
+        <div><p class="kicker">Sticker section 01</p><h2>Full Calendar</h2></div>
+        <input id="search" placeholder="Search team, group, city..." />
+      </div>
+      <div class="table-wrap match-table-wrap"><table id="scheduleTable"></table></div>
+    </section>
+
+    <section id="quiniela" class="grid-two album-section">
+      <div class="panel sticker-card prediction-center">
+        <p class="kicker">Sticker section 02</p>
+        <h2>Register predictions</h2>
+        <p class="muted">Enter your name once, search a match, add the score, and save it directly from the match card. You can also tap <b>Predict</b> from the calendar to jump directly to that match.</p>
+        <div class="form participant-bar">
+          <label>Participant<input id="participantGlobal" required placeholder="Name" /></label>
+          <label>Email / ID optional<input id="participantIdGlobal" placeholder="email or nickname" /></label>
+          <label>Search match<input id="predictionSearch" placeholder="Mexico, final, group, city..." /></label>
+        </div>
+        <div id="predictionMatchList" class="prediction-list" aria-live="polite"></div>
+      </div>
+      <div class="panel sticker-card">
+        <p class="kicker">Sticker section 03</p>
+        <h2>Latest predictions</h2>
+        <p class="muted">Each participant can update the same match. The app keeps the latest prediction per participant + match.</p>
+        <div class="table-wrap compact"><table id="predictionsTable"></table></div>
+      </div>
+    </section>
+
+    <section id="results" class="panel album-section results-album">
+      <div class="section-head">
+        <div><p class="kicker">Sticker section 04</p><h2>Actual results — one list inside the app</h2></div>
+        <button id="saveAllResultsBtn">Save visible results</button>
+      </div>
+      <p class="muted">Fill scores here as matches finish. Leave empty when the result is not available.</p>
+      <div class="table-wrap match-table-wrap"><table id="resultsTable"></table></div>
+    </section>
+
+    <section id="leaderboard" class="panel album-section podium-section">
+      <div class="section-head">
+        <div><p class="kicker">Sticker section 05</p><h2>Position Table</h2></div>
+        <button id="refreshBtn" class="secondary">REFRESH DATA</button>
+      </div>
+      <div class="table-wrap"><table id="leaderboardTable"></table></div>
+    </section>
+  </main>
+
+  <footer>
+    <span class="footer-logo-slot">IMAGE URL SLOT</span>
+    <p>Fan quiniela tool. Insert official artwork/logo URLs only when you have usage rights.</p>
+  </footer>
+  <script src="app.js"></script>
+</body>
+</html>

@@ -24,6 +24,7 @@ const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz8AX1jgvQ1mi
 
 let predictions = [];
 let results = {};
+let matchControl = {};
 let loading = false;
 const $=id=>document.getElementById(id);
 
@@ -32,7 +33,15 @@ function points(p){const r=results[p.matchId];if(!r || r.home === '' || r.away =
 function matchLabel(m){return `M${String(m.id).padStart(3,'0')} · ${m.home} vs ${m.away}`}
 function setStatus(msg, type='info'){$('connectionStatus').innerHTML=msg;$('connectionStatus').className='panel status '+type;}
 function isConfigured(){return GOOGLE_SCRIPT_URL && GOOGLE_SCRIPT_URL.startsWith('https://script.google.com/macros/');}
+function isMatchClosed(matchId){
 
+  const status =
+    (matchControl[String(matchId)] || 'OPEN')
+      .toUpperCase();
+
+  return status === 'CLOSED'
+      || status === 'HIDDEN';
+}
 function jsonp(params){
   return new Promise((resolve,reject)=>{
     if(!isConfigured()){reject(new Error('Google Script URL is not configured.'));return;}
@@ -56,6 +65,7 @@ async function loadFromSheet(){
     if(!data.ok) throw new Error(data.error||'Unknown sync error');
     predictions=(data.predictions||[]).map(p=>({name:p.name, participantId:p.participantId||'', matchId:+p.matchId, predHome:+p.predHome, predAway:+p.predAway, createdAt:p.createdAt||'', updatedAt:p.updatedAt||''}));
     results={};
+    matchControl = data.matchControl || {};
     (data.results||[]).forEach(r=>{results[+r.matchId]={home:r.home, away:r.away, updatedAt:r.updatedAt||''};});
     setStatus('Data refreshed successfully.','ok');
   }catch(err){setStatus('Connection issue: '+err.message,'error');}
@@ -115,15 +125,30 @@ function renderPredictionList(filter=''){
   const rows=schedule.filter(m=>((Object.values(m).join(' ')+' M'+String(m.id).padStart(3,'0')+' Match '+m.id).toLowerCase()).includes(q)).slice(0,104);
   container.innerHTML=rows.map(m=>{
     const existing=latestPredictionFor(m.id);
+    const closed = isMatchClosed(m.id);
+
+if (
+  (matchControl[String(m.id)] || '')
+    .toUpperCase() === 'HIDDEN'
+){
+  return '';
+}
     return `<article class="prediction-match-card" data-match-id="${m.id}">
       <div class="pm-meta"><span class="match-id">M${String(m.id).padStart(3,'0')}</span><span class="tag">${m.stage}</span><span>${m.date}</span></div>
       <div class="pm-teams"><b>${m.home}</b><span>vs</span><b>${m.away}</b></div>
       <div class="pm-venue">${m.venue} · ${m.time}</div>
-      <div class="pm-score">
-        <label>${m.home}<input class="quickPredInput" data-match-id="${m.id}" data-side="home" type="number" min="0" max="20" value="${existing?existing.predHome:''}" placeholder="0"></label>
+      ${closed ? `
+<div class="closed-badge">
+Predictions Closed
+</div>
+` : ``}
+${closed ? '' : `
+<div class="pm-score">
+`}        <label>${m.home}<input class="quickPredInput" data-match-id="${m.id}" data-side="home" type="number" min="0" max="20" value="${existing?existing.predHome:''}" placeholder="0"></label>
         <label>${m.away}<input class="quickPredInput" data-match-id="${m.id}" data-side="away" type="number" min="0" max="20" value="${existing?existing.predAway:''}" placeholder="0"></label>
         <button class="savePredictionBtn" data-match-id="${m.id}" type="button">Save</button>
       </div>
+      ${closed ? '' : '</div>'}
       <small class="pm-saved">${existing?'Current saved prediction: '+existing.predHome+'-'+existing.predAway:'No prediction saved yet'}</small>
     </article>`
   }).join('') || '<p class="muted">No matches found.</p>';
@@ -152,6 +177,13 @@ $('predictionMatchList').addEventListener('click', async e=>{
   const btn=e.target.closest('.savePredictionBtn');
   if(!btn) return;
   const matchId=+btn.dataset.matchId;
+  if(isMatchClosed(matchId)){
+  setStatus(
+    'Predictions closed for this match.',
+    'warn'
+  );
+  return;
+}
   const name=currentParticipant();
   if(!name){setStatus('Please enter participant name first.','warn');$('participantGlobal').focus();return;}
   const home=document.querySelector(`.quickPredInput[data-match-id="${matchId}"][data-side="home"]`).value;
